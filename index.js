@@ -8,52 +8,52 @@ canvas.width = width;
 canvas.height = height;
 
 const stars = [];
-const numberOfStars = 120;
+const numberOfStars = 200;
 let totalNumber = numberOfStars;
 
 const randomIntFromInterval = (min, max) => { 
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-class Star {
-    constructor(posX, posY, speed, id) {
-        this.posX = posX;
-        this.posY = posY;
-        this.speed = speed
-        this.id = id;
-    }
-
-    move() {
-        this.posX += 1 * this.speed;
-        this.posY += 1 * this.speed;
-    }
-}
-
-
-
-for(let i=0; i < numberOfStars; i++) {
+const createStarParams = () => {
     const side = randomIntFromInterval(0, 1);
-    const id = '_' + Math.random().toString(36).substr(2, 9);
-    console.log(id);
-    if(side === 0) {
-        stars.push(new Star(0, randomIntFromInterval(0, width), Math.random() * 5, id));
-    }
-    if(side === 1) {
-        stars.push(new Star(randomIntFromInterval(0, height), 0, Math.random() * 5, id));
-    }
-    
+    let star = null;
+
+    if(side === 0) star = {posX: 0, posY: randomIntFromInterval(0, height), speed: Math.random() * 5}
+    if(side === 1) star = {posX: randomIntFromInterval(0, width), posY: 0, speed: Math.random() * 5}
+
+    return star
 }
 
-setInterval(() => {
-    stars.forEach((star) => {
-        star.move();
-        if(star.posX >= height || star.posY >= width) {
-            // const id = stars.map((star) => star.id).indexOf(star.id);
-            // console.log(id);
-        }
-    })
-}, 50);
+const initStars = () => {
+    for(let i=0; i < numberOfStars; i++) {
+        const starParams = createStarParams()
+        stars.push(new Star(starParams.posX, starParams.posY, starParams.speed));
+    }
+}
 
+
+const resetPositionIfCrossTheBorder = (star) => {
+    if(star.posX >= width) {
+        const starParams = createStarParams();
+        star.setPos(starParams.posX, starParams.posY,  starParams.speed);
+    } if(star.posY >= height) {
+        const starParams = createStarParams();
+        star.setPos(starParams.posX, starParams.posY,  starParams.speed);
+    }
+}
+
+const moveStars = () => {
+    setInterval(() => {
+        stars.forEach((star, index) => {
+            star.move();
+            resetPositionIfCrossTheBorder(star);
+        })
+    }, 50);
+}
+
+initStars();
+moveStars();
 
 const draw = () => {
     ctx.fillStyle = 'black';
