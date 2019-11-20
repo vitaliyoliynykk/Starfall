@@ -8,7 +8,7 @@ canvas.width = width;
 canvas.height = height;
 
 const stars = [];
-const numberOfStars = 200;
+const numberOfStars = 300;
 let totalNumber = numberOfStars;
 
 const randomIntFromInterval = (min, max) => { 
@@ -61,7 +61,7 @@ const draw = () => {
 
     
     stars.forEach((star) => {
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = `rgb(255,255,51, ${1 * star.speed / 5})`;
         ctx.beginPath()
         ctx.arc(star.posX, star.posY, 1, 0, 2 * Math.PI);
         ctx.closePath()
